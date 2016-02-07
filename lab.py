@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import os
 import sys
+from subprocess import call
 
 import mininet.cli
 from mininet.topo import Topo
@@ -29,12 +30,29 @@ hosts = [
         'mac': '00:00:00:00:35:02',
         'ip': '10.0.35.2/24',
         'switch': 's1'
+    },
+    {
+        'name': 'h35_3',
+        'mac': '00:00:00:00:35:03',
+        'ip': '10.0.35.3/24',
+        'switch': 's2'
     }
 ]
 
 swobjs = {}
 swports = {}
 hostobjs = {}
+
+def addTunnel(switchName, sourceIp=None):
+    ifaceName = '{}_vxlan0'.format(switchName)
+    cmd = ['ovs-vsctl', 'add-port', switchName, ifaceName,
+           '--', 'set', 'Interface', ifaceName,
+           'type=vxlan',
+           'options:remote_ip=flow',
+           'options:key=flow']
+    if sourceIp is not None:
+        cmd.append('options:source_ip={}'.format(sourceIp))
+    call(cmd)
 
 def setup_mininet(controller):
     setLogLevel('info')
@@ -57,8 +75,11 @@ def setup_mininet(controller):
             hostobjs[host['name']] = hostobj
             host['port'] = swports[host['switch']]
             swports[host['switch']] += 1
-
         net.start()
+
+        for sw in switches:
+            addTunnel(sw['name'])
+
         return net
     except Exception, e:
         net.stop()
