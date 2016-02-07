@@ -11,6 +11,8 @@ from mininet.util import dumpNodeConnections
 from mininet.log import setLogLevel
 from mininet.node import Node
 
+from odl_gbp import *
+
 switches = [
     {
         'name': 's1',
@@ -89,6 +91,7 @@ def setup_mininet(controller):
         net.stop()
         raise e
 
+
 def main():
     controller = os.environ.get('ODL')
     if controller == None:
@@ -96,7 +99,17 @@ def main():
 
     net = None
     try:
+        # Setup Mininet with the configured topology
         net = setup_mininet(controller)
+
+        print "Creating Tenant"
+        put(controller, DEFAULT_PORT, get_tenant_uri(), get_tenant_data(), True)
+        print "Sending Tunnel"
+        put(controller, DEFAULT_PORT, get_tunnel_uri(), get_tunnel_data(switches), True)
+        print "Registering Endpoints"
+        for endpoint in get_endpoint_data(hosts):
+            post(controller, DEFAULT_PORT, get_endpoint_uri(), endpoint, True)
+
         if net is not None:
             mininet.cli.CLI(net)
     finally:
