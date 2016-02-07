@@ -10,6 +10,31 @@ from mininet.util import dumpNodeConnections
 from mininet.log import setLogLevel
 from mininet.node import Node
 
+switches = [
+    {
+        'name': 's1',
+        'dpid': '1',
+        'instance': None
+    },
+    {
+        'name': 's2',
+        'dpid': '2',
+        'instance': None
+    }
+]
+
+hosts = [
+    {
+        'name': 'h35_2',
+        'mac': '00:00:00:00:35:02',
+        'ip': '10.0.35.2/24',
+        'switch': 's1'
+    }
+]
+
+swobjs = {}
+swports = {}
+hostobjs = {}
 
 def setup_mininet(controller):
     setLogLevel('info')
@@ -19,6 +44,22 @@ def setup_mininet(controller):
 
     try:
         net.start()
+
+        for sw in switches:
+            swobjs[sw['name']] = net.addSwitch(sw['name'], dpid=sw['dpid'])
+            swports[sw['name']] = 0
+        for host in hosts:
+            if host['switch'] not in swobjs:
+                raise Exception("No switch named: {}".format(host['switch']))
+            swobj = swobjs[host['switch']]
+
+            hostobj = net.addHost(host['name'], ip=host['ip'], mac=host['mac'])
+            net.addLink(hostobj, swobj)
+
+            hostobjs[host['name']] = hostobj
+            host['port'] = swports[host['switch']]
+            swports[host['switch']] += 1
+
         return net
     except Exception, e:
         net.stop()
