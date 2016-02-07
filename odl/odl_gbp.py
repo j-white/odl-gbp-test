@@ -12,7 +12,7 @@ def get_epg(tenantId, epgId):
     k = "{}|{}".format(tenantId,epgId)
     if k in endpointGroups:
         return endpointGroups[k]
-    tenant = get_tenant(tenantId);
+    tenant = get_tenant(tenantId)
     data = {
         "id": epgId,
         "consumer-named-selector": [],
@@ -29,6 +29,7 @@ def get_tenant(tenantId):
         return tenants[tenantId]
     data = {
         "id": tenantId,
+        "name": "auto-provisioned-tenant",
         "l3-context": [],
         "l2-bridge-domain": [],
         "l2-flood-domain": [],
@@ -115,14 +116,11 @@ def get_ep(tenantId, groupId, l3ctx, ip, l2ctx, mac, sw, port):
     endpoints.append(data)
     return data
 
-nodes = []
-
 def get_node_config(sw, tun_ip):
     data = {
         "id": "openflow:{}".format(sw),
         "ofoverlay:tunnel-ip": tun_ip
     }
-    nodes.append(data)
     return data
 
 def get_contract(tenantId, pgroupId, cgroupId, contractId):
@@ -182,15 +180,15 @@ def put(url, data):
     print r.text
     r.raise_for_status()
 
-def register_tenants(contHost):
-    data = {"policy:tenants": {"tenant": tenants.values()}}
+def register_tenants(contHost, tenants):
+    data = {"policy:tenants": {"tenant": tenants}}
     put(REGISTER_TENANTS_URL % contHost, data)
 
-def register_eps(contHost):
+def register_eps(contHost, endpoints):
     for ep in endpoints:
        data = {"input": ep}
        post(REGISTER_EP_URL % contHost, data)
 
-def register_nodes(contHost):
+def register_nodes(contHost, nodes):
     data = {"opendaylight-inventory:nodes": {"node": nodes}}
     put(REGISTER_NODES_URL % contHost, data)

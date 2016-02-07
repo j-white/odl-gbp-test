@@ -42,7 +42,7 @@ if __name__ == '__main__':
             for switch in switches:
                 odl_gbp.get_node_config(switch['dpid'], switch['tunnelIp'])
                 
-            #odl_gbp.register_nodes(args.controller)
+            odl_gbp.register_nodes(args.controller)
 
         tenant = odl_gbp.get_tenant(TENANT)
         odl_gbp.get_l3c(TENANT, L3CTX)
