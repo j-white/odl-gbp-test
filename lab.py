@@ -43,8 +43,6 @@ def setup_mininet(controller):
     net.addController('c0', controller=RemoteController, ip=controller, port=6653)
 
     try:
-        net.start()
-
         for sw in switches:
             swobjs[sw['name']] = net.addSwitch(sw['name'], dpid=sw['dpid'])
             swports[sw['name']] = 0
@@ -60,6 +58,7 @@ def setup_mininet(controller):
             host['port'] = swports[host['switch']]
             swports[host['switch']] += 1
 
+        net.start()
         return net
     except Exception, e:
         net.stop()
