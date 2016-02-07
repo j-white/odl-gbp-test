@@ -30,13 +30,15 @@ hosts = [
     {
         'name': 'h35_2',
         'mac': '00:00:00:00:35:02',
-        'ip': '10.0.35.2/24',
+        'ip': '10.0.35.2',
+        'prefix': 24,
         'switch': 's1'
     },
     {
         'name': 'h35_3',
         'mac': '00:00:00:00:35:03',
-        'ip': '10.0.35.3/24',
+        'ip': '10.0.35.3',
+        'prefix': 24,
         'switch': 's2'
     }
 ]
@@ -74,7 +76,7 @@ def setup_mininet(controller):
                 raise Exception("No switch named: {}".format(host['switch']))
             swobj = swobjs[host['switch']]
 
-            hostobj = net.addHost(host['name'], ip=host['ip'], mac=host['mac'])
+            hostobj = net.addHost(host['name'], ip="{}/{}".format(host['ip'], host['prefix']), mac=host['mac'])
             net.addLink(hostobj, swobj)
 
             hostobjs[host['name']] = hostobj
