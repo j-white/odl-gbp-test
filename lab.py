@@ -54,6 +54,9 @@ def addTunnel(switchName, sourceIp=None):
         cmd.append('options:source_ip={}'.format(sourceIp))
     call(cmd)
 
+def setOFVersion(sw, version='OpenFlow13'):
+    call(['ovs-vsctl', 'set', 'bridge', sw, 'protocols={}'.format(version)])
+
 def setup_mininet(controller):
     setLogLevel('info')
 
@@ -79,6 +82,7 @@ def setup_mininet(controller):
 
         for sw in switches:
             addTunnel(sw['name'])
+            setOFVersion(sw['name'])
 
         return net
     except Exception, e:
