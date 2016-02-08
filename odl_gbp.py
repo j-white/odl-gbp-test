@@ -79,21 +79,20 @@ def get_tenant_data():
                                     {
                                         "direction": "in",
                                         "name": "http-dest",
-					"instance-name" : "http-dest"
+					                    "instance-name" : "http-dest"
                                     },
                                     {
                                         "direction": "out",
                                         "name": "http-src",
-					"instance-name" : "http-src"
+					                    "instance-name" : "http-src"
                                     }
                                 ],
-                                                    "action-ref": [
-                      {
-                        "name": "allow1",
-                        "order": 0
-                      }
-                    ],
-
+                                "action-ref": [
+                                    {
+                                        "name": "allow1",
+                                        "order": 0
+                                    }
+                                ],
                                 "name": "allow-http-rule"
                             }
                         ]
@@ -105,16 +104,15 @@ def get_tenant_data():
                                 "classifier-ref": [
                                     {
                                         "name": "icmp",
-					"instance-name" : "icmp"
+					                    "instance-name" : "icmp"
                                     }
                                 ],
-                                                    "action-ref": [
-                      {
-                        "name": "allow1",
-                        "order": 0
-                      }
-                    ],
-
+                                "action-ref": [
+                                     {
+                                        "name": "allow1",
+                                        "order": 0
+                                    }
+                                ],
                                 "name": "allow-icmp-rule"
                             }
                         ]
@@ -295,7 +293,7 @@ def get_endpoint_data(hosts):
     for host in hosts:
         endpoints.append({
             "input": {
-                "endpoint-group": "1eaf9a67-a171-42a8-9282-71cf702f61dd",
+                "endpoint-group": "1eaf9a67-a171-42a8-9282-71cf702f61dd" if host['ip'].startswith("10.0.35") else "e593f05d-96be-47ad-acd5-ba81465680d5",
                 "network-containment" : "d2779562-ebf1-45e6-93a4-78e2362bc418" if host['ip'].startswith("10.0.35") else "2c71d675-693e-406f-899f-12a026eb55f1",
                 "l2-context": "7b796915-adf4-4356-b5ca-de005ac410c1",
                 "mac-address": host['mac'],
