@@ -129,7 +129,7 @@ def main():
     conf_switches = []
     if args.switch:
         for switch in switches:
-            if switch['name'] == args.switchl:
+            if switch['name'] == args.switch:
                 conf_switches = [switch]
                 break
 
