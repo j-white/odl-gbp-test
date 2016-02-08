@@ -82,7 +82,7 @@ def setup_mininet(controller, configured_switches):
         for sw in switches:
             is_configured = False
             for confsw in configured_switches:
-                if sw['name'] == configured_switches:
+                if sw['name'] == confsw:
                     is_configured = True
                     break
 
@@ -107,6 +107,15 @@ def setup_mininet(controller, configured_switches):
 
         i = 1
         for sw in switches:
+            is_configured = False
+            for confsw in configured_switches:
+                if sw['name'] == confsw:
+                    is_configured = True
+                    break
+
+            if not is_configured:
+                continue
+
             addTunnel(sw['name'], i)
             i += 1
             #setOFVersion(sw['name'])
