@@ -264,7 +264,7 @@ def get_tunnel_data(switches):
         "ofoverlay:tunnel": [
           {
             "tunnel-type": "overlay:tunnel-type-vxlan",
-            "node-connector-id": "openflow:1:1",
+            "node-connector-id": "openflow:1:4",
             "ip": "10.255.1.2",
             "port": 4789
           }
