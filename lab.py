@@ -3,6 +3,7 @@ import os
 import sys
 from subprocess import call
 import time
+import argparse
 
 import mininet.cli
 from mininet.topo import Topo
@@ -71,7 +72,7 @@ def addTunnel(switchName, index, sourceIp=None):
 def setOFVersion(sw, version='OpenFlow13'):
     call(['ovs-vsctl', 'set', 'bridge', sw, 'protocols={}'.format(version)])
 
-def setup_mininet(controller):
+def setup_mininet(controller, configured_switches):
     setLogLevel('info')
 
     net = Mininet(controller=None, autoSetMacs=True, listenPort=6634)
@@ -79,11 +80,20 @@ def setup_mininet(controller):
 
     try:
         for sw in switches:
+            is_configured = False
+            for confsw in configured_switches:
+                if sw['name'] == configured_switches:
+                    is_configured = True
+                    break
+
+            if not is_configured:
+                continue
+
             swobjs[sw['name']] = net.addSwitch(sw['name'], dpid=sw['dpid'], protocols='OpenFlow13')
             swports[sw['name']] = 1
         for host in hosts:
             if host['switch'] not in swobjs:
-                raise Exception("No switch named: {}".format(host['switch']))
+                continue
             swobj = swobjs[host['switch']]
 
             hostobj = net.addHost(host['name'], ip="{}/{}".format(host['ip'], host['prefix']), mac=host['mac'])
@@ -110,22 +120,32 @@ def setup_mininet(controller):
 
 
 def main():
-    controller = os.environ.get('ODL')
-    if controller == None:
-        sys.exit("No controller set.")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--switch')
+    parser.add_argument('--policy', action='store_true')
+    parser.add_argument('--controller', default='10.255.1.1')
+    args = parser.parse_args()
+
+    conf_switches = []
+    if args.switch:
+        for switch in switches:
+            if switch['name'] == args.switchl:
+                conf_switches = [switch]
+                break
 
     net = None
     try:
         # Setup Mininet with the configured topology
-        net = setup_mininet(controller)
+        net = setup_mininet(args.controller)
 
-        print "Creating Tenant"
-        put(controller, DEFAULT_PORT, get_tenant_uri(), get_tenant_data(), True)
-        print "Sending Tunnel"
-        put(controller, DEFAULT_PORT, get_tunnel_uri(), get_tunnel_data(switches), True)
-        print "Registering Endpoints"
-        for endpoint in get_endpoint_data(hosts):
-            post(controller, DEFAULT_PORT, get_endpoint_uri(), endpoint, True)
+        if args.policy:
+            print "Creating Tenant"
+            put(args.controller, DEFAULT_PORT, get_tenant_uri(), get_tenant_data(), True)
+            print "Sending Tunnel"
+            put(args.controller, DEFAULT_PORT, get_tunnel_uri(), get_tunnel_data(switches), True)
+            print "Registering Endpoints"
+            for endpoint in get_endpoint_data(hosts):
+                post(args.controller, DEFAULT_PORT, get_endpoint_uri(), endpoint, True)
 
         if net is not None:
             mininet.cli.CLI(net)
