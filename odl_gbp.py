@@ -263,15 +263,9 @@ def get_tunnel_data(switches):
         "id": "openflow:1",
         "ofoverlay:tunnel": [
           {
-            "tunnel-type": "overlay:tunnel-type-vxlan-gpe",
-            "node-connector-id": "openflow:1:1",
-            "ip": "192.168.50.70",
-            "port": 6633
-          },
-          {
             "tunnel-type": "overlay:tunnel-type-vxlan",
-            "node-connector-id": "openflow:1:2",
-            "ip": "192.168.50.70",
+            "node-connector-id": "openflow:1:4",
+            "ip": "10.255.1.2",
             "port": 4789
           }
         ]
@@ -280,37 +274,13 @@ def get_tunnel_data(switches):
         "id": "openflow:2",
         "ofoverlay:tunnel": [
           {
-            "tunnel-type": "overlay:tunnel-type-vxlan-gpe",
-            "node-connector-id": "openflow:2:1",
-            "ip": "192.168.50.71",
-            "port": 6633
-          },
-          {
             "tunnel-type": "overlay:tunnel-type-vxlan",
             "node-connector-id": "openflow:2:2",
-            "ip": "192.168.50.71",
+            "ip": "10.255.1.3",
             "port": 4789
           }
         ]
-      },
-                   {
-        "id": "openflow:3",
-        "ofoverlay:tunnel": [
-          {
-            "tunnel-type": "overlay:tunnel-type-vxlan-gpe",
-            "node-connector-id": "openflow:3:1",
-            "ip": "192.168.50.72",
-            "port": 6633
-          },
-          {
-            "tunnel-type": "overlay:tunnel-type-vxlan",
-            "node-connector-id": "openflow:3:2",
-            "ip": "192.168.50.72",
-            "port": 4789
-          }
-        ]
-      },
-
+      }
     ]
   }
             }
@@ -335,7 +305,7 @@ def get_endpoint_data(hosts):
                 "l3-context": "cbe0cc07-b8ff-451d-8171-9eef002a8e80"
             }
         ],
-        "port-name": "vethl-h35_2",
+        "port-name": "sw1-eth1",
         "tenant": "f5c7d344-d1c7-4208-8531-2c2693657e12"
     }
 },
@@ -395,7 +365,7 @@ def get_endpoint_data(hosts):
                 "l3-context": "cbe0cc07-b8ff-451d-8171-9eef002a8e80"
             }
         ],
-        "port-name": "vethl-h35_5",
+        "port-name": "sw1-eth2",
         "tenant": "f5c7d344-d1c7-4208-8531-2c2693657e12"
     }
 },
@@ -455,7 +425,7 @@ def get_endpoint_data(hosts):
                 "l3-context": "cbe0cc07-b8ff-451d-8171-9eef002a8e80"
             }
         ],
-        "port-name": "vethl-h36_4",
+        "port-name": "sw1-eth3",
         "tenant": "f5c7d344-d1c7-4208-8531-2c2693657e12"
     }
 },{
