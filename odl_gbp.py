@@ -296,7 +296,7 @@ def get_endpoint_data(hosts):
         endpoints.append({
             "input": {
                 "endpoint-group": "1eaf9a67-a171-42a8-9282-71cf702f61dd",
-                "network-containment" : "d2779562-ebf1-45e6-93a4-78e2362bc418" if host['ip'].startwswith("10.0.35") else "2c71d675-693e-406f-899f-12a026eb55f1",
+                "network-containment" : "d2779562-ebf1-45e6-93a4-78e2362bc418" if host['ip'].startswith("10.0.35") else "2c71d675-693e-406f-899f-12a026eb55f1",
                 "l2-context": "7b796915-adf4-4356-b5ca-de005ac410c1",
                 "mac-address": host['mac'],
                 "l3-address": [
