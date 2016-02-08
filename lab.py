@@ -136,7 +136,7 @@ def main():
     net = None
     try:
         # Setup Mininet with the configured topology
-        net = setup_mininet(args.controller)
+        net = setup_mininet(args.controller, conf_switches)
 
         if args.policy:
             print "Creating Tenant"
