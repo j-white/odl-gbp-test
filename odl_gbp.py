@@ -79,20 +79,21 @@ def get_tenant_data():
                                     {
                                         "direction": "in",
                                         "name": "http-dest",
-					                    "instance-name" : "http-dest"
+					"instance-name" : "http-dest"
                                     },
                                     {
                                         "direction": "out",
                                         "name": "http-src",
-					                    "instance-name" : "http-src"
+					"instance-name" : "http-src"
                                     }
                                 ],
-                                "action-ref": [
-                                    {
-                                        "name": "allow1",
-                                        "order": 0
-                                    }
-                                ],
+                                                    "action-ref": [
+                      {
+                        "name": "allow1",
+                        "order": 0
+                      }
+                    ],
+
                                 "name": "allow-http-rule"
                             }
                         ]
@@ -104,15 +105,16 @@ def get_tenant_data():
                                 "classifier-ref": [
                                     {
                                         "name": "icmp",
-					                    "instance-name" : "icmp"
+					"instance-name" : "icmp"
                                     }
                                 ],
-                                "action-ref": [
-                                     {
-                                        "name": "allow1",
-                                        "order": 0
-                                    }
-                                ],
+                                                    "action-ref": [
+                      {
+                        "name": "allow1",
+                        "order": 0
+                      }
+                    ],
+
                                 "name": "allow-icmp-rule"
                             }
                         ]
@@ -253,8 +255,6 @@ def get_tenant_data():
 def get_tenant_uri():
     return "/restconf/config/policy:tenants/policy:tenant/f5c7d344-d1c7-4208-8531-2c2693657e12"
 
-
-
 def get_tunnel_data(switches):
     return {
   "opendaylight-inventory:nodes": {
@@ -263,9 +263,15 @@ def get_tunnel_data(switches):
         "id": "openflow:1",
         "ofoverlay:tunnel": [
           {
+            "tunnel-type": "overlay:tunnel-type-vxlan-gpe",
+            "node-connector-id": "openflow:1:1",
+            "ip": "192.168.50.70",
+            "port": 6633
+          },
+          {
             "tunnel-type": "overlay:tunnel-type-vxlan",
-            "node-connector-id": "openflow:1:4",
-            "ip": "10.255.1.2",
+            "node-connector-id": "openflow:1:2",
+            "ip": "192.168.50.70",
             "port": 4789
           }
         ]
@@ -274,13 +280,37 @@ def get_tunnel_data(switches):
         "id": "openflow:2",
         "ofoverlay:tunnel": [
           {
-            "tunnel-type": "overlay:tunnel-type-vxlan",
+            "tunnel-type": "overlay:tunnel-type-vxlan-gpe",
             "node-connector-id": "openflow:2:1",
-            "ip": "10.255.1.3",
+            "ip": "192.168.50.71",
+            "port": 6633
+          },
+          {
+            "tunnel-type": "overlay:tunnel-type-vxlan",
+            "node-connector-id": "openflow:2:2",
+            "ip": "192.168.50.71",
             "port": 4789
           }
         ]
-      }
+      },
+                   {
+        "id": "openflow:3",
+        "ofoverlay:tunnel": [
+          {
+            "tunnel-type": "overlay:tunnel-type-vxlan-gpe",
+            "node-connector-id": "openflow:3:1",
+            "ip": "192.168.50.72",
+            "port": 6633
+          },
+          {
+            "tunnel-type": "overlay:tunnel-type-vxlan",
+            "node-connector-id": "openflow:3:2",
+            "ip": "192.168.50.72",
+            "port": 4789
+          }
+        ]
+      },
+
     ]
   }
             }
@@ -289,30 +319,168 @@ def get_tunnel_uri():
     return "/restconf/config/opendaylight-inventory:nodes"
 
 def get_endpoint_data(hosts):
-    endpoints = []
-    for host in hosts:
-        endpoints.append({
-            "input": {
-                "endpoint-group": "1eaf9a67-a171-42a8-9282-71cf702f61dd" if host['ip'].startswith("10.0.35") else "e593f05d-96be-47ad-acd5-ba81465680d5",
-                "network-containment" : "d2779562-ebf1-45e6-93a4-78e2362bc418" if host['ip'].startswith("10.0.35") else "2c71d675-693e-406f-899f-12a026eb55f1",
-                "l2-context": "7b796915-adf4-4356-b5ca-de005ac410c1",
-                "mac-address": host['mac'],
-                "l3-address": [
-                    {
-                        "ip-address": host['ip'],
-                        "l3-context": "cbe0cc07-b8ff-451d-8171-9eef002a8e80"
-                    }
-                ],
-                "port-name": "{}-eth{}".format(host['switch'], host['sw-port']),
-                "tenant": "f5c7d344-d1c7-4208-8531-2c2693657e12"
-            }
-        })
-    return endpoints
+    return [{
+    "input": {
 
+        "endpoint-group": "1eaf9a67-a171-42a8-9282-71cf702f61dd",
+
+        "network-containment" : "d2779562-ebf1-45e6-93a4-78e2362bc418",
+
+        "l2-context": "7b796915-adf4-4356-b5ca-de005ac410c1",
+        "mac-address": "00:00:00:00:35:02",
+
+        "l3-address": [
+            {
+                "ip-address": "10.0.35.2",
+                "l3-context": "cbe0cc07-b8ff-451d-8171-9eef002a8e80"
+            }
+        ],
+        "port-name": "vethl-h35_2",
+        "tenant": "f5c7d344-d1c7-4208-8531-2c2693657e12"
+    }
+},
+            {
+    "input": {
+
+        "endpoint-group": "1eaf9a67-a171-42a8-9282-71cf702f61dd",
+
+        "network-containment" : "d2779562-ebf1-45e6-93a4-78e2362bc418",
+
+        "l2-context": "7b796915-adf4-4356-b5ca-de005ac410c1",
+        "mac-address": "00:00:00:00:35:03",
+
+        "l3-address": [
+            {
+                "ip-address": "10.0.35.3",
+                "l3-context": "cbe0cc07-b8ff-451d-8171-9eef002a8e80"
+            }
+        ],
+        "port-name": "vethl-h35_3",
+        "tenant": "f5c7d344-d1c7-4208-8531-2c2693657e12"
+    }
+},
+            {
+    "input": {
+
+        "endpoint-group": "1eaf9a67-a171-42a8-9282-71cf702f61dd",
+
+        "network-containment" : "d2779562-ebf1-45e6-93a4-78e2362bc418",
+
+        "l2-context": "7b796915-adf4-4356-b5ca-de005ac410c1",
+        "mac-address": "00:00:00:00:35:04",
+
+        "l3-address": [
+            {
+                "ip-address": "10.0.35.4",
+                "l3-context": "cbe0cc07-b8ff-451d-8171-9eef002a8e80"
+            }
+        ],
+        "port-name": "vethl-h35_4",
+        "tenant": "f5c7d344-d1c7-4208-8531-2c2693657e12"
+    }
+},
+            {
+    "input": {
+
+        "endpoint-group": "1eaf9a67-a171-42a8-9282-71cf702f61dd",
+
+        "network-containment" : "d2779562-ebf1-45e6-93a4-78e2362bc418",
+
+        "l2-context": "7b796915-adf4-4356-b5ca-de005ac410c1",
+        "mac-address": "00:00:00:00:35:05",
+
+        "l3-address": [
+            {
+                "ip-address": "10.0.35.5",
+                "l3-context": "cbe0cc07-b8ff-451d-8171-9eef002a8e80"
+            }
+        ],
+        "port-name": "vethl-h35_5",
+        "tenant": "f5c7d344-d1c7-4208-8531-2c2693657e12"
+    }
+},
+            {
+    "input": {
+
+        "endpoint-group": "e593f05d-96be-47ad-acd5-ba81465680d5",
+
+        "network-containment" : "2c71d675-693e-406f-899f-12a026eb55f1",
+
+        "l2-context": "7b796915-adf4-4356-b5ca-de005ac410c1",
+        "mac-address": "00:00:00:00:36:02",
+
+        "l3-address": [
+            {
+                "ip-address": "10.0.36.2",
+                "l3-context": "cbe0cc07-b8ff-451d-8171-9eef002a8e80"
+            }
+        ],
+        "port-name": "vethl-h36_2",
+        "tenant": "f5c7d344-d1c7-4208-8531-2c2693657e12"
+    }
+},
+            {
+    "input": {
+
+        "endpoint-group": "e593f05d-96be-47ad-acd5-ba81465680d5",
+
+        "network-containment" : "2c71d675-693e-406f-899f-12a026eb55f1",
+
+        "l2-context": "7b796915-adf4-4356-b5ca-de005ac410c1",
+        "mac-address": "00:00:00:00:36:03",
+
+        "l3-address": [
+            {
+                "ip-address": "10.0.36.3",
+                "l3-context": "cbe0cc07-b8ff-451d-8171-9eef002a8e80"
+            }
+        ],
+        "port-name": "vethl-h36_3",
+        "tenant": "f5c7d344-d1c7-4208-8531-2c2693657e12"
+    }
+},
+            {
+    "input": {
+
+        "endpoint-group": "e593f05d-96be-47ad-acd5-ba81465680d5",
+
+        "network-containment" : "2c71d675-693e-406f-899f-12a026eb55f1",
+
+        "l2-context": "7b796915-adf4-4356-b5ca-de005ac410c1",
+        "mac-address": "00:00:00:00:36:04",
+
+        "l3-address": [
+            {
+                "ip-address": "10.0.36.4",
+                "l3-context": "cbe0cc07-b8ff-451d-8171-9eef002a8e80"
+            }
+        ],
+        "port-name": "vethl-h36_4",
+        "tenant": "f5c7d344-d1c7-4208-8531-2c2693657e12"
+    }
+},{
+    "input": {
+
+        "endpoint-group": "e593f05d-96be-47ad-acd5-ba81465680d5",
+
+        "network-containment" : "2c71d675-693e-406f-899f-12a026eb55f1",
+
+        "l2-context": "7b796915-adf4-4356-b5ca-de005ac410c1",
+        "mac-address": "00:00:00:00:36:05",
+
+        "l3-address": [
+            {
+                "ip-address": "10.0.36.5",
+                "l3-context": "cbe0cc07-b8ff-451d-8171-9eef002a8e80"
+            }
+        ],
+        "port-name": "vethl-h36_5",
+        "tenant": "f5c7d344-d1c7-4208-8531-2c2693657e12"
+    }
+}]
 
 def get_endpoint_uri():
     return "/restconf/operations/endpoint:register-endpoint"
-
 
 if __name__ == "__main__":
     # Launch main menu
@@ -335,3 +503,7 @@ if __name__ == "__main__":
     print "registering endpoints"
     for endpoint in get_endpoint_data():
         post(controller, DEFAULT_PORT, get_endpoint_uri(),endpoint,True)
+
+
+
+
