@@ -48,11 +48,13 @@ swobjs = {}
 swports = {}
 hostobjs = {}
 
-def addTunnel(switchName, sourceIp=None):
+def addTunnel(switchName, index, sourceIp=None):
     ifaceName = '{}_vxlan0'.format(switchName)
     cmd = ['ovs-vsctl', 'add-port', switchName, ifaceName,
            '--', 'set', 'Interface', ifaceName,
            'type=vxlan',
+           # FIXME
+           "option:local_ip=127.0.0.{}".format(index),
            'options:remote_ip=flow',
            'options:key=flow']
     if sourceIp is not None:
@@ -86,8 +88,10 @@ def setup_mininet(controller):
 
         net.start()
 
+        i = 1
         for sw in switches:
-            addTunnel(sw['name'])
+            addTunnel(sw['name'], i)
+            i += 1
             #setOFVersion(sw['name'])
 
         time.sleep(3)
