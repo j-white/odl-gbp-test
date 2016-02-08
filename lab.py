@@ -52,6 +52,14 @@ hosts = [
         'prefix': 24,
         'switch': 's1',
         'sw-port': 2
+    },
+    {
+        'name': 'h36_2',
+        'mac': '00:00:00:00:36:02',
+        'ip': '10.0.36.2',
+        'prefix': 24,
+        'switch': 's1',
+        'sw-port': 3
     }
 ]
 
@@ -60,20 +68,15 @@ swports = {}
 hostobjs = {}
 
 def addTunnel(switchName, index, sourceIp=None):
-    ifaceName = '{}_vxlan0'.format(switchName)
+    ifaceName = '{}-vxlan-0'.format(switchName)
     cmd = ['ovs-vsctl', 'add-port', switchName, ifaceName,
            '--', 'set', 'Interface', ifaceName,
            'type=vxlan',
-           # FIXME
-           #"option:local_ip=127.0.0.{}".format(index),
            'options:remote_ip=flow',
            'options:key=flow']
     if sourceIp is not None:
         cmd.append('options:source_ip={}'.format(sourceIp))
     call(cmd)
-
-def setOFVersion(sw, version='OpenFlow13'):
-    call(['ovs-vsctl', 'set', 'bridge', sw, 'protocols={}'.format(version)])
 
 def setup_mininet(controller, configured_switches, configured_hosts):
     setLogLevel('info')
