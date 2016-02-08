@@ -2,6 +2,7 @@
 import os
 import sys
 from subprocess import call
+import time
 
 import mininet.cli
 from mininet.topo import Topo
@@ -69,7 +70,7 @@ def setup_mininet(controller):
 
     try:
         for sw in switches:
-            swobjs[sw['name']] = net.addSwitch(sw['name'], dpid=sw['dpid'])
+            swobjs[sw['name']] = net.addSwitch(sw['name'], dpid=sw['dpid'], protocols='OpenFlow13')
             swports[sw['name']] = 0
         for host in hosts:
             if host['switch'] not in swobjs:
@@ -82,11 +83,14 @@ def setup_mininet(controller):
             hostobjs[host['name']] = hostobj
             host['port'] = swports[host['switch']]
             swports[host['switch']] += 1
+
         net.start()
 
         for sw in switches:
             addTunnel(sw['name'])
-            setOFVersion(sw['name'])
+            #setOFVersion(sw['name'])
+
+        time.sleep(3)
 
         return net
     except Exception, e:
