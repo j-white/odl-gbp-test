@@ -62,7 +62,7 @@ def addTunnel(switchName, index, sourceIp=None):
            '--', 'set', 'Interface', ifaceName,
            'type=vxlan',
            # FIXME
-           "option:local_ip=127.0.0.{}".format(index),
+           #"option:local_ip=127.0.0.{}".format(index),
            'options:remote_ip=flow',
            'options:key=flow']
     if sourceIp is not None:
