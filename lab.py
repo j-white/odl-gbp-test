@@ -79,16 +79,7 @@ def setup_mininet(controller, configured_switches):
     net.addController('c0', controller=RemoteController, ip=controller, port=6653)
 
     try:
-        for sw in switches:
-            is_configured = False
-            for confsw in configured_switches:
-                if sw['name'] == confsw:
-                    is_configured = True
-                    break
-
-            if not is_configured:
-                continue
-
+        for sw in configured_switches:
             swobjs[sw['name']] = net.addSwitch(sw['name'], dpid=sw['dpid'], protocols='OpenFlow13')
             swports[sw['name']] = 1
         for host in hosts:
@@ -106,16 +97,7 @@ def setup_mininet(controller, configured_switches):
         net.start()
 
         i = 1
-        for sw in switches:
-            is_configured = False
-            for confsw in configured_switches:
-                if sw['name'] == confsw:
-                    is_configured = True
-                    break
-
-            if not is_configured:
-                continue
-
+        for sw in configured_switches:
             addTunnel(sw['name'], i)
             i += 1
             #setOFVersion(sw['name'])
