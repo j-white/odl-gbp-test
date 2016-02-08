@@ -303,7 +303,7 @@ def get_endpoint_data(hosts):
                         "l3-context": "cbe0cc07-b8ff-451d-8171-9eef002a8e80"
                     }
                 ],
-                "port-name": "{}-eth{}".format(host['switch'], host['port']),
+                "port-name": "{}-eth{}".format(host['switch'], host['sw-port']),
                 "tenant": "f5c7d344-d1c7-4208-8531-2c2693657e12"
             }
         })

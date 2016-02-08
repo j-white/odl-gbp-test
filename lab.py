@@ -34,21 +34,24 @@ hosts = [
         'mac': '00:00:00:00:35:02',
         'ip': '10.0.35.2',
         'prefix': 24,
-        'switch': 's1'
+        'switch': 's1',
+        'sw-port': 1
     },
     {
         'name': 'h35_3',
         'mac': '00:00:00:00:35:03',
         'ip': '10.0.35.3',
         'prefix': 24,
-        'switch': 's2'
+        'switch': 's2',
+        'sw-port': 1
     },
     {
         'name': 'h35_4',
         'mac': '00:00:00:00:35:04',
         'ip': '10.0.35.4',
         'prefix': 24,
-        'switch': 's1'
+        'switch': 's1',
+        'sw-port': 2
     }
 ]
 
@@ -146,7 +149,7 @@ def main():
             print "Sending Tunnel"
             put(args.controller, DEFAULT_PORT, get_tunnel_uri(), get_tunnel_data(switches), True)
             print "Registering Endpoints"
-            for endpoint in get_endpoint_data(conf_hosts):
+            for endpoint in get_endpoint_data(hosts):
                 post(args.controller, DEFAULT_PORT, get_endpoint_uri(), endpoint, True)
 
         if net is not None:
