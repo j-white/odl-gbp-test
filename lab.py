@@ -80,7 +80,7 @@ def setup_mininet(controller):
     try:
         for sw in switches:
             swobjs[sw['name']] = net.addSwitch(sw['name'], dpid=sw['dpid'], protocols='OpenFlow13')
-            swports[sw['name']] = 0
+            swports[sw['name']] = 1
         for host in hosts:
             if host['switch'] not in swobjs:
                 raise Exception("No switch named: {}".format(host['switch']))
