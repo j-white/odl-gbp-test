@@ -1,3 +1,7 @@
+# odl-gpb-test
+
+Scripts for testing Group Based Policy in OpenDaylight
+
 ## Dump flows
 
 ```sh
