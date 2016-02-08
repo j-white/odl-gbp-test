@@ -72,7 +72,7 @@ def addTunnel(switchName, index, sourceIp=None):
 def setOFVersion(sw, version='OpenFlow13'):
     call(['ovs-vsctl', 'set', 'bridge', sw, 'protocols={}'.format(version)])
 
-def setup_mininet(controller, configured_switches):
+def setup_mininet(controller, configured_switches, configured_hosts):
     setLogLevel('info')
 
     net = Mininet(controller=None, autoSetMacs=True, listenPort=6634)
@@ -82,9 +82,9 @@ def setup_mininet(controller, configured_switches):
         for sw in configured_switches:
             swobjs[sw['name']] = net.addSwitch(sw['name'], dpid=sw['dpid'], protocols='OpenFlow13')
             swports[sw['name']] = 1
-        for host in hosts:
+        for host in configured_hosts:
             if host['switch'] not in swobjs:
-                continue
+                raise Exception("No switch found")
             swobj = swobjs[host['switch']]
 
             hostobj = net.addHost(host['name'], ip="{}/{}".format(host['ip'], host['prefix']), mac=host['mac'])
@@ -124,10 +124,21 @@ def main():
                 conf_switches = [switch]
                 break
 
+    conf_hosts = []
+    for host in hosts:
+        found_switch = False
+        for switch in conf_switches:
+            if host['switch'] == switch['name']:
+                found_switch = True
+                break
+
+        if found_switch:
+            conf_hosts.append(host)
+
     net = None
     try:
         # Setup Mininet with the configured topology
-        net = setup_mininet(args.controller, conf_switches)
+        net = setup_mininet(args.controller, conf_switches, conf_hosts)
 
         if args.policy:
             print "Creating Tenant"
@@ -135,7 +146,7 @@ def main():
             print "Sending Tunnel"
             put(args.controller, DEFAULT_PORT, get_tunnel_uri(), get_tunnel_data(switches), True)
             print "Registering Endpoints"
-            for endpoint in get_endpoint_data(hosts):
+            for endpoint in get_endpoint_data(conf_hosts):
                 post(args.controller, DEFAULT_PORT, get_endpoint_uri(), endpoint, True)
 
         if net is not None:
